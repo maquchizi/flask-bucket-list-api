@@ -16,8 +16,8 @@ class User(db.Model):
     surname = db.Column(db.String(255))
     password = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
-    created = db.Column(db.DateTime())
-    modified = db.Column(db.DateTime())
+    date_created = db.Column(db.DateTime())
+    date_modified = db.Column(db.DateTime())
 
     def __init__(self, forename, email):
         self.forename = forename
@@ -34,11 +34,11 @@ class Bucketlist(db.Model):
     list_id = db.Column(db.Integer, primary_key=True)
     list_title = db.Column(db.String(255))
     list_description = db.Column(db.String(255))
-    user = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     items = db.relationship('BucketlistItem', backref='bucketlist',
                             lazy='dynamic')
-    created = db.Column(db.DateTime())
-    modified = db.Column(db.DateTime())
+    date_created = db.Column(db.DateTime())
+    date_modified = db.Column(db.DateTime())
 
 
 class BucketlistItem(db.Model):
@@ -47,9 +47,10 @@ class BucketlistItem(db.Model):
     """
     item_id = db.Column(db.Integer, primary_key=True)
     item_content = db.Column(db.String(255))
+    done = db.Column(db.Boolean(), default=False)
     bucketlist = db.Column(db.Integer, db.ForeignKey('bucketlist.list_id'))
-    created = db.Column(db.DateTime())
-    modified = db.Column(db.DateTime())
+    date_created = db.Column(db.DateTime())
+    date_modified = db.Column(db.DateTime())
 
 
 db.create_all()

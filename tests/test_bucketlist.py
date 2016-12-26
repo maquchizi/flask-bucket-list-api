@@ -1,10 +1,13 @@
 from unittest import TestCase
+import server
 
 
 class TestBucketlist(TestCase):
 
     def test_it_creates_bucketlist(self):
-        pass
+        bucketlist = server.BucketList()
+        response = server.BucketList.post(bucketlist)
+        self.assertEqual(200, response['status_code'])
 
     def test_it_edits_bucketlist(self):
         pass
