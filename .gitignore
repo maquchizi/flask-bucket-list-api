@@ -96,3 +96,6 @@ ENV/
 *.sublime-*
 *.db
 *.db-*
+
+# Local config files
+config.py

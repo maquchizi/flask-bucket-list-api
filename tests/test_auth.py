@@ -24,6 +24,9 @@ class TestAuth(TestCase):
     def test_allows_registration(self):
         pass
 
+    def test_it_fails_registration_if_email_already_taken(self):
+        pass
+
     def test_registration_fails_if_all_fields_not_present(self):
         pass
 
