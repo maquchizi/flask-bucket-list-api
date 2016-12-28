@@ -1,10 +1,12 @@
 from flask import Flask
 from bucketlist import config
+from bucketlist.api import Api as API
 from flask_restful import Api, Resource
 
 app = Flask(__name__)
 app.config.from_object(config)
-api = Api(app)
+api = Api(app, catch_all_404s=True)
+API = API()
 
 
 class BucketlistItem(Resource):
@@ -25,8 +27,9 @@ class BucketlistItem(Resource):
 
 class BucketList(Resource):
     """docstring for BucketList"""
-    def post(self):
-        return {'buckelist': 'New', 'status_code': 201}
+    def post(self, list_id=None):
+        response = API.create_bucketlist(list_id)
+        return response
 
     def get(self, list_id=None):
         print('Something')
@@ -44,4 +47,4 @@ api.add_resource(BucketlistItem, '/bucketlists/<int:list_id>/items',
                  '/bucketlists/<int:list_id>/items/<int:item_id>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

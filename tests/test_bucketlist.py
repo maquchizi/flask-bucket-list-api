@@ -7,7 +7,7 @@ class TestBucketlist(TestCase):
     def test_it_creates_bucketlist(self):
         bucketlist = server.BucketList()
         response = server.BucketList.post(bucketlist)
-        self.assertEqual(200, response['status_code'])
+        self.assertEqual(200, response[1])
 
     def test_it_edits_bucketlist(self):
         pass
