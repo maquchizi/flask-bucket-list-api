@@ -4,16 +4,28 @@ import server
 
 class TestBucketlist(TestCase):
 
+    def setUp(self):
+        self.bucketlist = server.BucketList()
+
     def test_it_creates_bucketlist(self):
-        bucketlist = server.BucketList()
-        response = server.BucketList.post(bucketlist)
+        response = self.bucketlist.post()
+        self.assertEqual(201, response[1])
+
+    def test_it_updates_bucketlist(self):
+        list_id = 1
+        response = self.bucketlist.put(list_id)
         self.assertEqual(200, response[1])
 
-    def test_it_edits_bucketlist(self):
-        pass
+        self.assertEqual('The bucketlist with ID %s was updated' % list_id,
+                         response[0]['message'])
 
     def test_it_deletes_bucketlist(self):
-        pass
+        list_id = 1
+        response = self.bucketlist.delete(list_id)
+        self.assertEqual(200, response[1])
+
+        self.assertEqual('The bucketlist with ID %s was deleted' % list_id,
+                         response[0]['message'])
 
     def test_it_fails_to_create_bucketlist_if_fields_missing(self):
         pass

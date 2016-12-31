@@ -26,19 +26,29 @@ class BucketlistItem(Resource):
 
 
 class BucketList(Resource):
-    """docstring for BucketList"""
+    """
+    BucketList
+
+    Handle all requests to /bucketlists
+    """
     def post(self, list_id=None):
         response = API.create_bucketlist(list_id)
         return response
 
     def get(self, list_id=None):
-        print('Something')
+        if not list_id:
+            response = API.get_bucketlists()
+        else:
+            response = API.get_bucketlist(list_id)
+        return response
 
-    def put(self, list_id):
-        pass
+    def put(self, list_id=None):
+        response = API.update_bucketlist(list_id)
+        return response
 
-    def delete(self, list_id):
-        pass
+    def delete(self, list_id=None):
+        response = API.delete_bucketlist(list_id)
+        return response
 
 
 # Set up api routing
