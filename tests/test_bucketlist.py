@@ -36,7 +36,7 @@ class TestBucketlist(TestCase):
     def test_it_does_not_create_buckelist_if_not_logged_in(self):
         pass
 
-    def test_it_does_edit_bucketlist_if_not_logged_in(self):
+    def test_it_does_not_edit_bucketlist_if_not_logged_in(self):
         pass
 
     def test_it_does_not_delete_bucketlist_if_not_logged_in(self):

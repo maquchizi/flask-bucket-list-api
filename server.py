@@ -11,7 +11,7 @@ API = API()
 
 class BucketlistItem(Resource):
     """
-    BucketlsitItem
+    BucketlistItem
 
     Handle all requests to /bucketlists/<int:list_id>/items/<int:item_id>
     """
