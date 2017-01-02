@@ -12,17 +12,20 @@ API = API()
 class BucketlistItem(Resource):
     """
     BucketlsitItem
+
+    Handle all requests to /bucketlists/<int:list_id>/items/<int:item_id>
     """
-    def post(self, list_id):
-        print(list_id)
+    def post(self, list_id=None):
+        response = API.create_bucketlist_item(list_id)
+        return response
 
-    def put(self, list_id, item_id):
-        print(list_id)
-        print(item_id)
+    def put(self, list_id=None, item_id=None):
+        response = API.update_bucketlist_item(list_id, item_id)
+        return response
 
-    def delete(self, list_id, item_id):
-        print(list_id)
-        print(item_id)
+    def delete(self, list_id=None, item_id=None):
+        response = API.delete_bucketlist_item(list_id, item_id)
+        return response
 
 
 class BucketList(Resource):

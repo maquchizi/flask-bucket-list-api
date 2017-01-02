@@ -41,3 +41,34 @@ class Api(object):
             return {'message': 'That list was not found'}, 404
         return {'message':
                 'The bucketlist with ID %s was deleted' % list_id}, 200
+
+    def create_bucketlist_item(self, list_id):
+        """
+        Create a new item in the list specified by list_id
+        """
+        if not list_id:
+            return {'message': 'That list was not found'}, 404
+        return {'message':
+                'Item created in bucketlist with ID %s' % list_id}, 201
+
+    def update_bucketlist_item(self, list_id, item_id):
+        """
+        Update a list item with id item_id
+
+        The item must be in the list specified by list_id
+        """
+        if not item_id:
+            return {'message': 'That item was not found'}, 404
+        return {'message':
+                'Item with ID %s was updated' % item_id}, 200
+
+    def delete_bucketlist_item(self, list_id, item_id):
+        """
+        Delete a list item with id item_id
+
+        The item must be in the list specified by list_id
+        """
+        if not item_id:
+            return {'message': 'That item was not found'}, 404
+        return {'message':
+                'Item with ID %s was deleted' % item_id}, 200
