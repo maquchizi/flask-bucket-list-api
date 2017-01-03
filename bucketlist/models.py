@@ -19,7 +19,8 @@ class User(db.Model):
     _password = db.Column(db.LargeBinary)
     email = db.Column(db.String(255), unique=True)
     date_created = db.Column(db.DateTime(), server_default=func.now())
-    date_modified = db.Column(db.DateTime(), onupdate=func.now())
+    date_modified = db.Column(db.DateTime(), server_default=func.now(),
+                              onupdate=func.now())
 
     def __init__(self, forename, surname, password, email):
         self.forename = forename
@@ -33,6 +34,10 @@ class User(db.Model):
     @property
     def password(self):
         return self._password
+
+    @property
+    def id(self):
+        return self.user_id
 
     @password.setter
     def password(self, password):
@@ -55,7 +60,8 @@ class Bucketlist(db.Model):
     items = db.relationship('BucketlistItem', backref='list',
                             lazy='dynamic')
     date_created = db.Column(db.DateTime(), server_default=func.now())
-    date_modified = db.Column(db.DateTime(), onupdate=func.now())
+    date_modified = db.Column(db.DateTime(), server_default=func.now(),
+                              onupdate=func.now())
 
     def __init__(self, list_title, list_description, created_by):
         self.list_title = list_title
@@ -72,7 +78,8 @@ class BucketlistItem(db.Model):
     done = db.Column(db.Boolean(), default=False)
     bucketlist = db.Column(db.Integer, db.ForeignKey('bucketlist.list_id'))
     date_created = db.Column(db.DateTime(), server_default=func.now())
-    date_modified = db.Column(db.DateTime(), onupdate=func.now())
+    date_modified = db.Column(db.DateTime(), server_default=func.now(),
+                              onupdate=func.now())
 
     def __init__(self, item_content, bucketlist, done):
         self.item_content = item_content
