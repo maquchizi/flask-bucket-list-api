@@ -1,13 +1,19 @@
+import bucketlist
+import json
 from unittest import TestCase
-# from server import server
 
 
 class TestAuth(TestCase):
 
+    def setUp(self):
+        self.client = bucketlist.app.test_client()
+
     def test_it_allows_login(self):
-        # user = server.authenticate('mark.nganga@andela.com', 'p@ssw0rd')
-        # print(user)
-        pass
+        response = self.client.post('/auth/login', data=json.dumps({"email": "mark.nganga@andela.com", "password": "p@ssw0rd"}), content_type='application/json')
+
+        content = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('access_token', content)
 
     def test_login_fails_with_incorrect_credentials(self):
         pass
