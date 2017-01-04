@@ -1,9 +1,12 @@
 from unittest import TestCase
+# from server import server
 
 
 class TestAuth(TestCase):
 
     def test_it_allows_login(self):
+        # user = server.authenticate('mark.nganga@andela.com', 'p@ssw0rd')
+        # print(user)
         pass
 
     def test_login_fails_with_incorrect_credentials(self):

@@ -3,27 +3,14 @@ from bucketlist import config
 from bucketlist.api import Api as API
 from flask_restful import Api, Resource
 from flask_jwt import JWT, jwt_required
-from bucketlist.models import User
+from bucketlist.auth import Auth
 
 app = Flask(__name__)
 app.config.from_object(config)
 api = Api(app, catch_all_404s=True)
 API = API()
-
-
-def authenticate(email, password):
-    user = User.query.filter_by(email=email).first()
-    if user.check_password(password):
-        return user
-    return False
-
-
-def identity(payload):
-    user_id = payload['identity']
-    return User.query.filter_by(user_id=user_id).first()
-
-
-jwt = JWT(app, authenticate, identity)
+Auth = Auth()
+jwt = JWT(app, Auth.authenticate, Auth.identity)
 
 
 class Register(Resource):
