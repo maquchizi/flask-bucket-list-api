@@ -1,6 +1,6 @@
 from flask import Flask
 from bucketlist import config
-from bucketlist.api import Api as API
+from bucketlist.bucketlist_api import AppAPI
 from flask_restful import Api, Resource
 from flask_jwt import JWT, jwt_required
 from bucketlist.auth import Auth
@@ -8,9 +8,9 @@ from bucketlist.auth import Auth
 app = Flask(__name__)
 app.config.from_object(config)
 api = Api(app, catch_all_404s=True)
-API = API()
-Auth = Auth()
-jwt = JWT(app, Auth.authenticate, Auth.identity)
+API = AppAPI()
+auth = Auth()
+jwt = JWT(app, auth.authenticate, auth.identity)
 
 
 class RegisterAPI(Resource):

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from server import BucketlistItemAPI
+from bucketlist.app import BucketlistItemAPI
 
 
 class TestBucketlistItemAPI(TestCase):

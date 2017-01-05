@@ -1,1 +1,1 @@
-from server import app
+from bucketlist.app import app

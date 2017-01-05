@@ -8,7 +8,7 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 
 
-class Api(object):
+class AppAPI(object):
 
     def get_bucketlist(self, list_id):
         """
