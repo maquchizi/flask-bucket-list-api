@@ -1,11 +1,11 @@
 from unittest import TestCase
-from server import BucketList
+from server import BucketListAPI
 
 
-class TestBucketlist(TestCase):
+class TestBucketlistAPI(TestCase):
 
     def setUp(self):
-        self.bucketlist = BucketList()
+        self.bucketlist = BucketListAPI()
 
     def test_it_creates_bucketlist(self):
         response = self.bucketlist.post()

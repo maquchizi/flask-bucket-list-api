@@ -13,17 +13,17 @@ Auth = Auth()
 jwt = JWT(app, Auth.authenticate, Auth.identity)
 
 
-class Register(Resource):
+class RegisterAPI(Resource):
     """
-    Register
+    RegisterAPI
     """
     def post(self):
         pass
 
 
-class BucketlistItem(Resource):
+class BucketlistItemAPI(Resource):
     """
-    BucketlistItem
+    BucketlistItemAPI
 
     Handle all requests to /bucketlists/<int:list_id>/items/<int:item_id>
     """
@@ -40,9 +40,9 @@ class BucketlistItem(Resource):
         return response
 
 
-class BucketList(Resource):
+class BucketListAPI(Resource):
     """
-    BucketList
+    BucketListAPI
 
     Handle all requests to /bucketlists
     """
@@ -68,10 +68,10 @@ class BucketList(Resource):
 
 
 # Set up api routing
-api.add_resource(BucketList, '/bucketlists', '/bucketlists/<int:list_id>')
-api.add_resource(BucketlistItem, '/bucketlists/<int:list_id>/items',
+api.add_resource(BucketListAPI, '/bucketlists', '/bucketlists/<int:list_id>')
+api.add_resource(BucketlistItemAPI, '/bucketlists/<int:list_id>/items',
                  '/bucketlists/<int:list_id>/items/<int:item_id>')
-api.add_resource(Register, '/auth/register')
+api.add_resource(RegisterAPI, '/auth/registerAPI')
 
 if __name__ == '__main__':
     app.run(debug=True)

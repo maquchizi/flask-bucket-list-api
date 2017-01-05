@@ -3,7 +3,7 @@ import json
 from unittest import TestCase
 
 
-class TestAuth(TestCase):
+class TestAuthAPI(TestCase):
 
     def setUp(self):
         self.client = bucketlist.app.test_client()

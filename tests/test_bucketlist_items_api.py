@@ -1,11 +1,11 @@
 from unittest import TestCase
-from server import BucketlistItem
+from server import BucketlistItemAPI
 
 
-class TestBucketlistItem(TestCase):
+class TestBucketlistItemAPI(TestCase):
 
     def setUp(self):
-        self.bucketlist_item = BucketlistItem()
+        self.bucketlist_item = BucketlistItemAPI()
         self.list_id = 1
         self.item_id = 2
 
