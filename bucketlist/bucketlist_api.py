@@ -1,20 +1,63 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
+from flask_restful import reqparse, marshal, fields
 from bucketlist import config
 from bucketlist.models import User, Bucketlist, BucketlistItem
 
 app = Flask(__name__)
 app.config.from_object(config)
 db = SQLAlchemy(app)
+parser = reqparse.RequestParser()
 
 
 class AppAPI(object):
+
+    def register(self):
+        parser.add_argument('forename', required=True,
+                            help="Forename cannot be blank")
+        parser.add_argument('surname', required=True,
+                            help="Surname cannot be blank")
+        parser.add_argument('email', required=True,
+                            help="Email cannot be blank")
+        parser.add_argument('password', required=True,
+                            help="Password cannot be blank")
+        args = parser.parse_args()
+        try:
+            user = User(args.forename, args.surname, args.password, args.email)
+            db.session.add(user)
+            db.session.commit()
+            return {'message': 'New user created'}, 201
+        except IntegrityError:
+            return {'message': 'That email address is already taken'}, 400
 
     def get_bucketlist(self, list_id):
         """
         Get a single bucketlist selected by ID
         """
-        return {'message': 'Here is the list with ID %s' % list_id}, 200
+        item_fields = {
+            "item_id": fields.String,
+            "item_content": fields.String,
+            "done": fields.Boolean,
+            "date_created": fields.DateTime(dt_format='rfc822'),
+            "date_modified": fields.DateTime(dt_format='rfc822')
+        }
+        list_fields = {
+            "list_id": fields.String,
+            "list_title": fields.String,
+            "list_description": fields.String,
+            "items": fields.Nested(item_fields),
+            "created_by": fields.String,
+            "date_created": fields.DateTime(dt_format='rfc822'),
+            "date_modified": fields.DateTime(dt_format='rfc822')
+        }
+        bucketlist = Bucketlist.query.filter_by(list_id=list_id).first()
+        if bucketlist is not None:
+            response = marshal(bucketlist, list_fields)
+            return {'list': response, 'message': 'Here is the list with ID %s'
+                    % list_id}, 200
+        else:
+            return {'message': 'Bucketlist not found'}, 404
 
     def get_bucketlists(self):
         """

@@ -18,7 +18,8 @@ class RegisterAPI(Resource):
     RegisterAPI
     """
     def post(self):
-        pass
+        response = API.register()
+        return response
 
 
 class BucketlistItemAPI(Resource):
@@ -71,7 +72,7 @@ class BucketListAPI(Resource):
 api.add_resource(BucketListAPI, '/bucketlists', '/bucketlists/<int:list_id>')
 api.add_resource(BucketlistItemAPI, '/bucketlists/<int:list_id>/items',
                  '/bucketlists/<int:list_id>/items/<int:item_id>')
-api.add_resource(RegisterAPI, '/auth/registerAPI')
+api.add_resource(RegisterAPI, '/auth/register')
 
 if __name__ == '__main__':
     app.run(debug=True)

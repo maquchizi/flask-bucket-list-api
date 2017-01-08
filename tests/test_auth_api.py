@@ -44,10 +44,26 @@ class TestAuthAPI(TestCase):
         pass
 
     def test_allows_registration(self):
-        pass
+        response = self.client.post('/auth/register',
+                                    data=json.dumps({"forename": "Second",
+                                                     "surname": "User",
+                                                     "password": "pass",
+                                                     "email":
+                                                     "some.other@gmail.com"}),
+                                    content_type='application/json')
+
+        self.assertEqual(response.status_code, 201)
 
     def test_it_fails_registration_if_email_already_taken(self):
-        pass
+        response = self.client.post('/auth/register',
+                                    data=json.dumps({"forename": "Second",
+                                                     "surname": "User",
+                                                     "password": "pass",
+                                                     "email":
+                                                     "some.other@gmail.com"}),
+                                    content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
 
     def test_registration_fails_if_all_fields_not_present(self):
         pass

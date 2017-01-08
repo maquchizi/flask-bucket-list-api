@@ -57,8 +57,8 @@ class Bucketlist(db.Model):
     list_title = db.Column(db.String(255))
     list_description = db.Column(db.String(255))
     created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    items = db.relationship('BucketlistItem', backref='list',
-                            lazy='dynamic')
+    items = db.relationship('BucketlistItem', backref='items',
+                            lazy='select')
     date_created = db.Column(db.DateTime(), server_default=func.now())
     date_modified = db.Column(db.DateTime(), server_default=func.now(),
                               onupdate=func.now())
