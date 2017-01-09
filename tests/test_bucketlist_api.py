@@ -1,4 +1,6 @@
 from unittest import TestCase
+import bucketlist
+import json
 from bucketlist.app import BucketListAPI
 
 
@@ -6,10 +8,27 @@ class TestBucketlistAPI(TestCase):
 
     def setUp(self):
         self.bucketlist = BucketListAPI()
+        self.client = bucketlist.app.test_client()
+        correct_credentials = json.dumps({"email":
+                                          "mark.nganga@andela.com",
+                                          "password": "p@ssw0rd"})
+        response = self.client.post('/auth/login',
+                                    data=correct_credentials,
+                                    content_type='application/json')
+
+        content = json.loads(response.get_data())
+        self.access_token = content['access_token']
 
     def test_it_creates_bucketlist(self):
-        response = self.bucketlist.post()
-        self.assertEqual(201, response[1])
+        new_bucketlist = json.dumps({"list_title": "Third List", "list_description": "This is the decription"})
+
+        response = self.client.post('/bucketlists',
+                                    data=new_bucketlist,
+                                    content_type='application/json',
+                                    headers={'Authorization': 'JWT %s' % self.access_token})
+
+        content = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 201)
 
     def test_it_updates_bucketlist(self):
         list_id = 1

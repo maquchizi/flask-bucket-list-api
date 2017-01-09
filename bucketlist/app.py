@@ -2,7 +2,7 @@ from flask import Flask
 from bucketlist import config
 from bucketlist.bucketlist_api import AppAPI
 from flask_restful import Api, Resource
-from flask_jwt import JWT, jwt_required
+from flask_jwt import JWT, jwt_required, current_identity
 from bucketlist.auth import Auth
 
 app = Flask(__name__)
@@ -47,6 +47,7 @@ class BucketListAPI(Resource):
 
     Handle all requests to /bucketlists
     """
+    @jwt_required()
     def post(self, list_id=None):
         response = API.create_bucketlist(list_id)
         return response

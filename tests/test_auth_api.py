@@ -48,8 +48,7 @@ class TestAuthAPI(TestCase):
                                     data=json.dumps({"forename": "Second",
                                                      "surname": "User",
                                                      "password": "pass",
-                                                     "email":
-                                                     "some.other@gmail.com"}),
+                                                     "email": "some.other@gmail.com"}),
                                     content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
@@ -59,8 +58,7 @@ class TestAuthAPI(TestCase):
                                     data=json.dumps({"forename": "Second",
                                                      "surname": "User",
                                                      "password": "pass",
-                                                     "email":
-                                                     "some.other@gmail.com"}),
+                                                     "email": "some.other@gmail.com"}),
                                     content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
