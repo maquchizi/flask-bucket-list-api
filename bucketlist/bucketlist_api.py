@@ -1,10 +1,10 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from flask_restful import reqparse, marshal, fields
+from flask_restful import reqparse, marshal
 from bucketlist import config
 from bucketlist.models import db, User, Bucketlist, BucketlistItem
 from flask_jwt import current_identity
+from serialize_fields import list_fields, list_fields_without_items
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -23,6 +23,8 @@ class AppAPI(object):
         parser.add_argument('password', required=True,
                             help="Password cannot be blank")
         args = parser.parse_args()
+
+        # Enforce the unique email address constraint
         try:
             user = User(args.forename, args.surname, args.password, args.email)
             db.session.add(user)
@@ -36,23 +38,10 @@ class AppAPI(object):
         """
         Get a single bucketlist selected by ID
         """
-        item_fields = {
-            "item_id": fields.String,
-            "item_content": fields.String,
-            "done": fields.Boolean,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
-        list_fields = {
-            "list_id": fields.String,
-            "list_title": fields.String,
-            "list_description": fields.String,
-            "items": fields.Nested(item_fields),
-            "created_by": fields.String,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
-        bucketlist = Bucketlist.query.filter_by(list_id=list_id).first()
+        # Get bucketlist item by ID only if it was created
+        # by the currently logged in user
+        bucketlist = Bucketlist.query.filter_by(
+            created_by=current_identity.user_id, list_id=list_id).first()
         if bucketlist is not None:
             response = marshal(bucketlist, list_fields)
             return {'bucketlist': response,
@@ -65,23 +54,9 @@ class AppAPI(object):
         """
         Get all bucketlists belonging to logged in user
         """
-        item_fields = {
-            "item_id": fields.String,
-            "item_content": fields.String,
-            "done": fields.Boolean,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
-        list_fields = {
-            "list_id": fields.String,
-            "list_title": fields.String,
-            "list_description": fields.String,
-            "items": fields.Nested(item_fields),
-            "created_by": fields.String,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
-        bucketlists = Bucketlist.query.filter_by(created_by=current_identity.user_id).all()
+        # Get bucketlists created by the currently logged in user
+        bucketlists = Bucketlist.query.filter_by(
+            created_by=current_identity.user_id).all()
         if bucketlists is not None:
             response = marshal(bucketlists, list_fields)
             return {'bucketlists': response,
@@ -103,19 +78,13 @@ class AppAPI(object):
                             help="List description cannot be blank")
         args = parser.parse_args()
 
-        list_fields = {
-            "list_id": fields.String,
-            "list_title": fields.String,
-            "list_description": fields.String,
-            "created_by": fields.String,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
+        # Create bucketlist from POST data
         bucketlist = Bucketlist(args.list_title, args.list_description,
                                 current_identity.user_id)
         db.session.add(bucketlist)
         db.session.commit()
-        response = marshal(bucketlist, list_fields)
+
+        response = marshal(bucketlist, list_fields_without_items)
         return {'bucketlist': response, 'message':
                 'New bucketlist created'}, 201
 
@@ -132,24 +101,8 @@ class AppAPI(object):
         parser.add_argument('list_description')
         args = parser.parse_args()
 
-        item_fields = {
-            "item_id": fields.String,
-            "item_content": fields.String,
-            "done": fields.Boolean,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
-        list_fields = {
-            "list_id": fields.String,
-            "list_title": fields.String,
-            "list_description": fields.String,
-            "items": fields.Nested(item_fields),
-            "created_by": fields.String,
-            "date_created": fields.DateTime(dt_format='rfc822'),
-            "date_modified": fields.DateTime(dt_format='rfc822')
-        }
-
-        bucketlist = Bucketlist.query.filter_by(created_by=current_identity.user_id, list_id=list_id).first()
+        bucketlist = Bucketlist.query.filter_by(
+            created_by=current_identity.user_id, list_id=list_id).first()
         if args.list_title:
             bucketlist.list_title = args.list_title
         if args.list_description:
@@ -172,7 +125,9 @@ class AppAPI(object):
         if not list_id:
             return {'message': 'That list was not found'}, 404
 
-        bucketlist = Bucketlist.query.filter_by(created_by=current_identity.user_id, list_id=list_id).first()
+        # Delete only if list os owned by currently logged in user
+        bucketlist = Bucketlist.query.filter_by(
+            created_by=current_identity.user_id, list_id=list_id).first()
 
         if bucketlist is not None:
             db.session.delete(bucketlist)
