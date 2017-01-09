@@ -175,31 +175,29 @@ class AppAPI(object):
         if not item_id or not list_id:
             return {'message': 'That item was not found'}, 404
 
-        bucketlist = Bucketlist.query.filter_by(
-            created_by=current_identity.user_id, list_id=list_id).first()
+        item = BucketlistItem.query.filter_by(
+            item_id=item_id, bucketlist=list_id).first()
 
-        if bucketlist is not None:
-            item = BucketlistItem.query.filter_by(
-                item_id=item_id, bucketlist=list_id).first()
+        if item is not None:
+            parser = reqparse.RequestParser()
+            parser.add_argument('item_content', required=True,
+                                help="Item content cannot be blank")
+            parser.add_argument('done')
+            args = parser.parse_args()
 
-            if item is not None:
-                parser = reqparse.RequestParser()
-                parser.add_argument('item_content', required=True,
-                                    help="Item content cannot be blank")
-                parser.add_argument('done')
-                args = parser.parse_args()
+            if args.item_content:
+                item.item_content = args.item_content
+            if args.done:
+                item.done = args.done
 
-                if args.item_content:
-                    item.item_content = args.item_content
-                if args.done:
-                    item.done = args.done
+            db.session.commit()
 
-                db.session.commit()
+            response = marshal(item, item_fields)
 
-                response = marshal(item, item_fields)
-
-                return {'item': response, 'message':
-                        'Item with ID %s was updated' % item.item_id}, 200
+            return {'item': response, 'message':
+                    'Item with ID %s was updated' % item.item_id}, 200
+        else:
+            return {'message': 'That item was not found'}, 404
 
     def delete_bucketlist_item(self, list_id, item_id):
         """
@@ -207,7 +205,16 @@ class AppAPI(object):
 
         The item must be in the list specified by list_id
         """
-        if not item_id:
+        if not item_id or not list_id:
             return {'message': 'That item was not found'}, 404
-        return {'message':
-                'Item with ID %s was deleted' % item_id}, 200
+
+        item = BucketlistItem.query.filter_by(
+            item_id=item_id, bucketlist=list_id).first()
+
+        if item is not None:
+            db.session.delete(item)
+            db.session.commit()
+            return {'message':
+                    'Item with ID %s was deleted' % item_id}, 200
+        else:
+            return {'message': 'That item was not found'}, 404
