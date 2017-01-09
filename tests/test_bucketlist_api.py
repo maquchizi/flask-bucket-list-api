@@ -1,13 +1,11 @@
 from unittest import TestCase
 import bucketlist
 import json
-from bucketlist.app import BucketListAPI
 
 
 class TestBucketlistAPI(TestCase):
 
     def setUp(self):
-        self.bucketlist = BucketListAPI()
         self.client = bucketlist.app.test_client()
         correct_credentials = json.dumps({"email":
                                           "mark.nganga@andela.com",

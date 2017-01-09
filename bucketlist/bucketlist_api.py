@@ -144,8 +144,24 @@ class AppAPI(object):
         """
         if not list_id:
             return {'message': 'That list was not found'}, 404
-        return {'message':
-                'Item created in bucketlist with ID %s' % list_id}, 201
+
+        bucketlist = Bucketlist.query.filter_by(
+            created_by=current_identity.user_id, list_id=list_id).first()
+
+        if bucketlist is not None:
+            parser = reqparse.RequestParser()
+            parser.add_argument('item_content', required=True,
+                                help="Item content cannot be blank")
+            args = parser.parse_args()
+
+            item = BucketlistItem(args.item_content, list_id, False)
+            db.session.add(item)
+            db.session.commit()
+
+            return {'message':
+                    'Item created in bucketlist with ID %s' % list_id}, 201
+        else:
+            return {'message': 'That list was not found'}, 404
 
     def update_bucketlist_item(self, list_id, item_id):
         """

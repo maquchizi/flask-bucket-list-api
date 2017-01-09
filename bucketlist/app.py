@@ -28,6 +28,7 @@ class BucketlistItemAPI(Resource):
 
     Handle all requests to /bucketlists/<int:list_id>/items/<int:item_id>
     """
+    @jwt_required()
     def post(self, list_id=None):
         response = API.create_bucketlist_item(list_id)
         return response
