@@ -28,15 +28,33 @@ class TestBucketlistAPI(TestCase):
                                     headers={'Authorization': 'JWT %s' % self.access_token})
 
         content = json.loads(response.get_data(as_text=True))
+        self.list_id = content['bucketlist']['list_id']
         self.assertEqual(response.status_code, 201)
 
     def test_it_updates_bucketlist(self):
-        list_id = 1
-        response = self.bucketlist.put(list_id)
-        self.assertEqual(200, response[1])
+        new_bucketlist = json.dumps({"list_title": "Third List", "list_description": "This is the decription"})
 
-        self.assertEqual('The bucketlist with ID %s was updated' % list_id,
-                         response[0]['message'])
+        response = self.client.post('/bucketlists',
+                                    data=new_bucketlist,
+                                    content_type='application/json',
+                                    headers={'Authorization': 'JWT %s' % self.access_token})
+
+        content = json.loads(response.get_data(as_text=True))
+        self.list_id = content['bucketlist']['list_id']
+
+
+        new_bucketlist = json.dumps({"list_title": "Third List Updated", "list_description": "This is the updated decription"})
+
+        response = self.client.put('/bucketlists/%s' % self.list_id,
+                                    data=new_bucketlist,
+                                    content_type='application/json',
+                                    headers={'Authorization': 'JWT %s' % self.access_token})
+
+        content = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual('The bucketlist with ID %s was updated' % self.list_id,
+                         content['message'])
 
     def test_it_deletes_bucketlist(self):
         list_id = 1

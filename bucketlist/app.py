@@ -60,6 +60,7 @@ class BucketListAPI(Resource):
             response = API.get_bucketlist(list_id)
         return response
 
+    @jwt_required()
     def put(self, list_id=None):
         response = API.update_bucketlist(list_id)
         return response
