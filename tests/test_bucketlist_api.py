@@ -57,12 +57,22 @@ class TestBucketlistAPI(TestCase):
                          content['message'])
 
     def test_it_deletes_bucketlist(self):
-        list_id = 1
-        response = self.bucketlist.delete(list_id)
-        self.assertEqual(200, response[1])
+        new_bucketlist = json.dumps({"list_title": "Another List", "list_description": "This is the decription"})
+
+        response = self.client.post('/bucketlists',
+                                    data=new_bucketlist,
+                                    content_type='application/json',
+                                    headers={'Authorization': 'JWT %s' % self.access_token})
+
+        content = json.loads(response.get_data(as_text=True))
+        list_id = content['bucketlist']['list_id']
+
+        response = self.client.delete('/bucketlists/%s' % list_id,
+                                      headers={'Authorization': 'JWT %s' % self.access_token})
+        content = json.loads(response.get_data(as_text=True))
 
         self.assertEqual('The bucketlist with ID %s was deleted' % list_id,
-                         response[0]['message'])
+                         content['message'])
 
     def test_it_fails_to_create_bucketlist_if_fields_missing(self):
         pass

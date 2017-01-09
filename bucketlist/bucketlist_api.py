@@ -3,12 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_restful import reqparse, marshal, fields
 from bucketlist import config
-from bucketlist.models import User, Bucketlist, BucketlistItem
+from bucketlist.models import db, User, Bucketlist, BucketlistItem
 from flask_jwt import current_identity
 
 app = Flask(__name__)
 app.config.from_object(config)
-db = SQLAlchemy(app)
 
 
 class AppAPI(object):
@@ -172,8 +171,17 @@ class AppAPI(object):
         """
         if not list_id:
             return {'message': 'That list was not found'}, 404
-        return {'message':
-                'The bucketlist with ID %s was deleted' % list_id}, 200
+
+        bucketlist = Bucketlist.query.filter_by(created_by=current_identity.user_id, list_id=list_id).first()
+
+        if bucketlist is not None:
+            db.session.delete(bucketlist)
+            db.session.commit()
+
+            return {'message':
+                    'The bucketlist with ID %s was deleted' % list_id}, 200
+        else:
+            return {'message': 'Bucketlist not found'}, 404
 
     def create_bucketlist_item(self, list_id):
         """

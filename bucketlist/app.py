@@ -65,6 +65,7 @@ class BucketListAPI(Resource):
         response = API.update_bucketlist(list_id)
         return response
 
+    @jwt_required()
     def delete(self, list_id=None):
         response = API.delete_bucketlist(list_id)
         return response
