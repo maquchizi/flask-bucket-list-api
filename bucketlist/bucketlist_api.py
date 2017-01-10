@@ -59,15 +59,26 @@ class AppAPI(object):
         parser = reqparse.RequestParser()
         parser.add_argument('limit', location='args')
         parser.add_argument('offset', location='args')
+        parser.add_argument('q', location='args')
         args = parser.parse_args()
         # The number of results to get
         limit = args.limit
         # Position at which retrieval of results should start
         offset = args.offset
+        # Search terms
+        search_terms = args.q
 
-        bucketlists = Bucketlist.query.filter_by(
-            created_by=current_identity.user_id).\
-            limit(limit).offset(offset).all()
+        if search_terms and len(search_terms) > 0:
+            bucketlists = Bucketlist.query.filter_by(
+                created_by=current_identity.user_id).\
+                limit(limit).offset(offset).\
+                filter(Bucketlist.list_title.like('%' + search_terms + '%')).\
+                all()
+        else:
+            bucketlists = Bucketlist.query.filter_by(
+                created_by=current_identity.user_id).\
+                limit(limit).offset(offset).\
+                all()
         if bucketlists is not None:
             response = marshal(bucketlists, list_fields)
             return {'bucketlists': response,
