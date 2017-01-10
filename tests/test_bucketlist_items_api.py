@@ -67,7 +67,6 @@ class TestBucketlistItemAPI(TestCase):
                                     headers={'Authorization': 'JWT %s' % self.access_token})
         content = json.loads(response.get_data(as_text=True))
 
-
         self.assertEqual(200, response.status_code)
         self.assertEqual('Item with ID %s was updated' % item_id, content['message'])
 

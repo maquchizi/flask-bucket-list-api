@@ -56,8 +56,18 @@ class AppAPI(object):
         Get all bucketlists belonging to logged in user
         """
         # Get bucketlists created by the currently logged in user
+        parser = reqparse.RequestParser()
+        parser.add_argument('limit', location='args')
+        parser.add_argument('offset', location='args')
+        args = parser.parse_args()
+        # The number of results to get
+        limit = args.limit
+        # Position at which retrieval of results should start
+        offset = args.offset
+
         bucketlists = Bucketlist.query.filter_by(
-            created_by=current_identity.user_id).all()
+            created_by=current_identity.user_id).\
+            limit(limit).offset(offset).all()
         if bucketlists is not None:
             response = marshal(bucketlists, list_fields)
             return {'bucketlists': response,
@@ -126,7 +136,7 @@ class AppAPI(object):
         if not list_id:
             return {'message': 'That list was not found'}, 404
 
-        # Delete only if list os owned by currently logged in user
+        # Delete only if list is owned by currently logged in user
         bucketlist = Bucketlist.query.filter_by(
             created_by=current_identity.user_id, list_id=list_id).first()
 

@@ -73,13 +73,34 @@ class TestBucketlistAPI(TestCase):
                          content['message'])
 
     def test_it_fails_to_create_bucketlist_if_fields_missing(self):
-        pass
+        new_bucketlist = json.dumps({"list_description": "This is the decription"})
+
+        response = self.client.post('/bucketlists',
+                                    data=new_bucketlist,
+                                    content_type='application/json',
+                                    headers={'Authorization': 'JWT %s' % self.access_token})
+        self.assertEqual(response.status_code, 400)
 
     def test_does_not_list_bucketlists_if_not_logged_in(self):
-        pass
+        response = self.client.get('/bucketlists')
+        self.assertEqual(response.status_code, 401)
 
     def test_it_does_not_create_buckelist_if_not_logged_in(self):
-        pass
+        new_bucketlist = json.dumps({"list_title": "Another List", "list_description": "This is the decription"})
+
+        response = self.client.post('/bucketlists',
+                                    data=new_bucketlist,
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_it_returns_specified_limit(self):
+        response = self.client.get('/bucketlists?limit=2',
+                                   content_type='application/json',
+                                   headers={'Authorization': 'JWT %s' % self.access_token})
+        content = json.loads(response.get_data(as_text=True))
+
+        assert (len(content['bucketlists']) <= 2)
+        self.assertEqual(response.status_code, 200)
 
     def test_it_does_not_edit_bucketlist_if_not_logged_in(self):
         pass
