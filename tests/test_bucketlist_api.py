@@ -108,18 +108,3 @@ class TestBucketlistAPI(TestCase):
 
         assert (len(content['bucketlists']) <= 2)
         self.assertEqual(response.status_code, 200)
-
-    def test_it_does_not_edit_bucketlist_if_not_logged_in(self):
-        pass
-
-    def test_it_does_not_delete_bucketlist_if_not_logged_in(self):
-        pass
-
-    def test_it_does_not_edit_list_not_owned_by_user(self):
-        pass
-
-    def test_it_does_not_delete_list_not_owned_by_user(self):
-        pass
-
-    def test_it_does_not_list_bucketlists_not_owned_by_user(self):
-        pass

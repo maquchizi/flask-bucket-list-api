@@ -69,15 +69,3 @@ class TestAuthAPI(TestCase):
                                     content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
-
-    def test_registration_fails_if_all_fields_not_present(self):
-        pass
-
-    def test_registration_error_specifies_one_missing_field(self):
-        pass
-
-    def test_registration_error_specifies_all_missing_filelds(self):
-        pass
-
-    def test_returns_token_on_successful_registration(self):
-        pass
