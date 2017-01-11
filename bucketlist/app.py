@@ -1,5 +1,5 @@
 from flask import Flask
-from bucketlist import config
+import config
 from bucketlist.bucketlist_api import AppAPI
 from flask_restful import Api, Resource
 from flask_jwt import JWT, jwt_required

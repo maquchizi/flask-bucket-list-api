@@ -85,6 +85,13 @@ class TestBucketlistAPI(TestCase):
         response = self.client.get('/bucketlists')
         self.assertEqual(response.status_code, 401)
 
+    def test_does_not_get_non_existent_bucketlist(self):
+        response = self.client.get('/bucketlists/10000',
+                                   content_type='application/json',
+                                   headers={'Authorization': 'JWT %s' % self.access_token})
+
+        self.assertEqual(response.status_code, 404)
+
     def test_it_does_not_create_buckelist_if_not_logged_in(self):
         new_bucketlist = json.dumps({"list_title": "Another List", "list_description": "This is the decription"})
 

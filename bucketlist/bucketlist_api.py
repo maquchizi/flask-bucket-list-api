@@ -1,14 +1,9 @@
-from flask import Flask
 from sqlalchemy.exc import IntegrityError
 from flask_restful import reqparse, marshal
-from bucketlist import config
 from bucketlist.models import db, User, Bucketlist, BucketlistItem
 from flask_jwt import current_identity
 from serialize_fields import (list_fields, list_fields_without_items,
                               item_fields)
-
-app = Flask(__name__)
-app.config.from_object(config)
 
 
 class AppAPI(object):
@@ -24,7 +19,6 @@ class AppAPI(object):
         parser.add_argument('password', required=True,
                             help="Password cannot be blank")
         args = parser.parse_args()
-
         # Enforce the unique email address constraint
         try:
             user = User(args.forename, args.surname, args.password, args.email)

@@ -13,6 +13,13 @@ class TestAuthAPI(TestCase):
         self.incorrect_credentials = json.dumps({"email":
                                                 "mark.nganga@andela.com",
                                                  "password": "wr0ngp@ssw0rd"})
+        response = self.client.post('/auth/register',
+                                    data=json.dumps({"forename": "Mark",
+                                                     "surname": "Ng'ang'a",
+                                                     "password": "p@ssw0rd",
+                                                     "email": "mark.nganga@andela.com"}),
+                                    content_type='application/json')
+
 
     def test_it_allows_login(self):
         response = self.client.post('/auth/login',

@@ -12,17 +12,29 @@ This service implements Token Based Authentication for the API such that some me
 |-------------------------------------|------------------|--------------------------------------------------|----------------|
 | `/auth/login`                       | POST             | Logs a user in                                   | No             |
 | `/auth/register`                    | POST             | Register a user                                  | No             |
-| `/bucketlists/`                     | POST, GET        | Create a retrieve all bucket lists               | Yes            |
+| `/bucketlists`                      | POST, GET        | Create a retrieve all bucket lists               | Yes            |
 | `/bucketlists/<id>`                 | GET, PUT, DELETE | Retrieve, update and delete a single bucket list | Yes            |
-| `/bucketlists/<id>/items/`          | POST             | Create a new item in bucket list                 | Yes            |
+| `/bucketlists/<id>/items`           | POST             | Create a new item in bucket list                 | Yes            |
 | `/bucketlists/<id>/items/<item_id>` | PUT, DELETE      | Delete an item in a bucket list                  | Yes            |
 
+## Installation
+
+Clone the repo from github
+`git clone git@github.com:maquchizi/flask-bucket-list-api.git`
+
+Change directory into package
+`cd flask-bucket-list-api`
+
+Install dependencies
+`pip install requirements.txt`
 
 ## Dependencies
 Flask
+Flask-RESTful
 Flask-JWT
-Flask SQLAlchemy
+Flask-SQLAlchemy
 
-## Installation
+## Testing
+Use nosetests to run tests (with coverage) like this: `nosetests --with-coverage --cover-package=bucketlist`
 
 ## Usage

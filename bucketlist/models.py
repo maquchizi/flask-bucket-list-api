@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from bucketlist import config
+import config
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func
 
