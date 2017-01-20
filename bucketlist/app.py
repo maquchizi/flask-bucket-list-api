@@ -1,9 +1,10 @@
 from flask import Flask
 import config
 from bucketlist.bucketlist_api import AppAPI
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 from flask_jwt import JWT, jwt_required
 from bucketlist.auth import Auth
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -11,6 +12,31 @@ api = Api(app, catch_all_404s=True)
 API = AppAPI()
 auth = Auth()
 jwt = JWT(app, auth.authenticate, auth.identity)
+CORS(app)
+
+
+class LoginAPI(Resource):
+    """
+    LoginAPI
+    """
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', required=True,
+                            help="Email cannot be blank")
+        parser.add_argument('password', required=True,
+                            help="Password cannot be blank")
+        args = parser.parse_args()
+
+        try:
+            identity = jwt.authentication_callback(args.email, args.password)
+        except AttributeError:
+            return {'message': 'Invalid Credentials'}, 401
+
+        if identity:
+            access_token = jwt.jwt_encode_callback(identity)
+            return jwt.auth_response_callback(access_token, identity)
+        else:
+            return {'message': 'Invalid Credentials'}, 401
 
 
 class RegisterAPI(Resource):
@@ -79,3 +105,4 @@ api.add_resource(BucketListAPI, '/bucketlists', '/bucketlists/<int:list_id>')
 api.add_resource(BucketlistItemAPI, '/bucketlists/<int:list_id>/items',
                  '/bucketlists/<int:list_id>/items/<int:item_id>')
 api.add_resource(RegisterAPI, '/auth/register')
+api.add_resource(LoginAPI, '/auth/login')

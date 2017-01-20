@@ -20,7 +20,6 @@ class TestAuthAPI(TestCase):
                                                      "email": "mark.nganga@andela.com"}),
                                     content_type='application/json')
 
-
     def test_it_allows_login(self):
         response = self.client.post('/auth/login',
                                     data=self.correct_credentials,
