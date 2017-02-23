@@ -1,5 +1,8 @@
 # BucketList Application API
 
+[![CircleCI](https://circleci.com/gh/maquchizi/flask-bucket-list-api.svg?style=svg)](https://circleci.com/gh/maquchizi/flask-bucket-list-api) [![codecov](https://codecov.io/gh/maquchizi/flask-bucket-list-api/branch/develop/graph/badge.svg)](https://codecov.io/gh/maquchizi/flask-bucket-list-api)
+
+
 Flask API for a bucket list service
 
 ## Specifications

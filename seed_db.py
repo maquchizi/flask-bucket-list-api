@@ -18,3 +18,7 @@ db.session.commit()
 list_item = BucketlistItem('Do all the things', bucketlist.list_id, False)
 db.session.add(list_item)
 db.session.commit()
+
+list_item = BucketlistItem('Do more things', bucketlist.list_id, False)
+db.session.add(list_item)
+db.session.commit()
