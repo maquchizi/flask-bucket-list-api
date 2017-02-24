@@ -23,13 +23,25 @@ This service implements Token Based Authentication for the API such that some me
 ## Installation
 
 Clone the repo from github
-`git clone git@github.com:maquchizi/flask-bucket-list-api.git`
+`$ git clone git@github.com:maquchizi/flask-bucket-list-api.git`
 
 Change directory into package
-`cd flask-bucket-list-api`
+`$ cd flask-bucket-list-api`
+
+Install [virtualenvwrapper](http://virtualenvwrapper.readthedocs.io/en/latest/install.html) like this:
+```
+$ pip install virtualenvwrapper
+$ export WORKON_HOME=~/Envs
+$ mkdir -p $WORKON_HOME
+$ source /usr/local/bin/virtualenvwrapper.sh
+$ mkvirtualenv bucketlist
+```
+
+Activate the virtual environment using:
+`$ workon bucketlist`
 
 Install dependencies
-`pip install requirements.txt`
+`$ pip install requirements.txt`
 
 To run the app, navigate to the project folder and run `python index.py`
 
@@ -56,7 +68,7 @@ Cache-Control: no-cache
 
 cURL
 ```
-curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" 
+$ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" 
 -d '{"forename":"Salt","surname":"Bae","password":"superawesomepassword","email":"salt.bae@example.com"}' 
 "http://127.0.0.1:5000/auth/register"
 ```
@@ -81,7 +93,7 @@ Cache-Control: no-cache
 
 cURL
 ```
-curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache"
+$ curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache"
 -d '{"email":"salt.bae@example.com","password":"superawesomepassword"}'
 "http://127.0.0.1:5000/auth/login"
 ```
@@ -108,7 +120,7 @@ Cache-Control: no-cache
 
 cURL
 ```
-curl -X GET 
+$ curl -X GET 
 -H "Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6MzA5LCJpYXQiOjE0ODQyMTIxOTksIm5iZiI6MTQ4NDIxMjE5OSwiZXhwIjoxNDg0MjE1MTk5fQ._QC2nSgHDYilIY5jh6MIbhApiTAzjFmF4sCmCSYTch8"
 -H "Cache-Control: no-cache"
 "http://127.0.0.1:5000/bucketlists"
@@ -126,4 +138,7 @@ Postman
 - Flask-SQLAlchemy
 
 ## Testing
-Use nosetests to run tests (with coverage) like this: `nosetests --with-coverage --cover-package=bucketlist`
+To test the application, first set the `ENV` environment variable to `Testing` like this:
+```$ export ENV=Testing```
+Use nosetests to run tests (with coverage) like this:
+```$ nosetests --with-coverage --cover-package=bucketlist```
